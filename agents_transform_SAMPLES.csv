@@ -1,0 +1,20 @@
+local ID,Name,Type,AKA,Language.AKA,NS Name,Language.NS Name,Dates,Dates.normalized,Dates.type,Gender,VIAF,Name.VIAF,LOC,Name.LOC,HAF,Name.HAF,Syriaca,Name.Syriaca,Pinakes,Name.Pinakes,Notes
+1,"Abū Qurrah, Thāwdhūrus, approximately 750-825",individual,Theodore Abū Qurrah ; Theodore Bishop of Harran,English ; English,ثاوذورس أبي قرة,Arabic,approximately 750-825,725/850,floruit,male,http://viaf.org/viaf/116159414,"Abū Qurrah, Thāwdhūrus, approximately 750-825",http://id.loc.gov/authorities/names/n85000719,"Abū Qurrah, Thāwdhūrus, approximately 750-825",https://w3id.org/haf/person/515032103483,"Abū Qurrah, Thāwdhūrus, approximately 750-825",http://syriaca.org/person/782,Theodore Abu Qurra,,,
+2,"Andrew, of Crete, Saint, approximately 660-740",individual,,,,,approximately 660-740,635/765,floruit,male,http://viaf.org/viaf/10044124,"Andrew, of Crete, Saint, approximately 660-740",https://id.loc.gov/authorities/names/n79076042,"Andrew, of Crete, Saint, approximately 660-740",https://w3id.org/haf/person/227859237404,"Andrew, of Crete, Saint, approximately 660-740",https://syriaca.org/person/95,Andrew of Jerusalem,https://pinakes.irht.cnrs.fr/notices/auteur/187/,Andreas Cretensis,author
+3,"Babai, Mar, active 553-628",individual,Babai the Great,English,ܒܒܝ ܪܒܐ,Syriac,553-628,553/628,floruit,male,http://viaf.org/viaf/76706750,"Babai, Mar, active 553-628",https://id.loc.gov/authorities/names/n85044888,"Babai, Mar, active 553-628",https://w3id.org/haf/person/706952503553,"Babai, Mar, active 553-628",https://syriaca.org/person/359,Babai the Great,,,
+4,"Constantine VII Porphyrogenitus, Emperor of the East, 905-959",individual,,,Κωνσταντῖνος Πορφυρογέννητος,Greek,905-959,905/959,floruit,male,http://viaf.org/viaf/13108540,"Constantine VII Porphyrogenitus, Emperor of the East, 905-959",https://id.loc.gov/authorities/names/n82154652,"Constantine VII Porphyrogenitus, Emperor of the East, 905-959",https://w3id.org/haf/person/672089539461,"Constantine VII Porphyrogenitus, Emperor of the East, 905-959",,,https://pinakes.irht.cnrs.fr/notices/auteur/771/,Constantinus Porphyrogenitus VII,"17 May 905 – 9 November 959) was the fourth Emperor of the Macedonian dynasty of the Byzantine Empire, reigning from 6 June 913 to 9 November 959. He was the son of Emperor Leo VI and his fourth wife, Zoe Karbonopsina, and the nephew of his predecessor Emperor Alexander."
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
