@@ -6,7 +6,7 @@ Version: 1.0
 """
 
 # import the required dependencies
-import pandas as pd, json, sys, numpy as np
+import pandas as pd, json, sys, numpy as np, os
 
 # This is the script that transforms each row of the provided csv into a json document formatted accrding to the cross-walk schema
 def transform_input(row):
@@ -70,6 +70,9 @@ def transform_input(row):
     if pd.isnull(row["Notes"]) == False:
          data["Notes"].append({"value": row["Notes"]})
 
+    
+    if not os.path.exists("json"):
+        os.makedirs("json")
     with open(f'json/{local_id}.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     
