@@ -6,65 +6,78 @@ Version: 1.0
 """
 
 # import the required dependencies
-import pandas as pd, json, sys
+import pandas as pd, json, sys, numpy as np
+
+# This is the script that transforms each row of the provided csv into a json document formatted accrding to the cross-walk schema
+def transform_input(row):
+    # First pull out the basic columns associated with the row
+    local_id = str(row["local ID"])
+    type = row["Type"]
+    name = row["Name"]
+    gender = row["Gender"]
+    date_type = row["Dates.type"]
+    date = row["Dates"]
+    
+    #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
+    base_template_schema = f'''{{
+    "id": {local_id},
+    "type": "{type}",
+    "pref_name": "{name}",
+    "alt_name": [],
+    "gender": "{gender}",
+    "rel_con": [],
+    "assoc_date": [],
+    "Notes": []}}'''
+    
+    # Load base JSON template into JSON object
+    data = json.loads(base_template_schema)
+    
+    # Check if there are associated alternate names and if so append them to the json object
+    if pd.isnull(row["AKA"]) == False:
+        alt_names = zip(row["AKA"].split(" ; "), row["Language.AKA"].split(" ; "))
+        for (name, lang) in alt_names:
+            data["alt_name"].append({"lang": lang, "value": name})    
+    if pd.isnull(row["NS Name"]) == False:
+            alt_names = zip(row["NS Name"].split(" ; "), row["Language.NS Name"].split(" ; "))
+            for (name, lang) in alt_names:
+                data["alt_name"].append({"lang": lang, "value": name})
+
+    # Check to see if there is a date normalized
+    if "/" in row["Dates.normalized"]:
+        not_before = row["Dates.normalized"].split("/")[0].rjust(4, "0")
+        not_after = row["Dates.normalized"].split("/")[1].rjust(4, "0")
+        data["assoc_date"].append({"type": date_type,"iso": {"not_before": not_before, "not_after": not_after},"value": date})         
+    else:
+        not_before = row["Dates.normalized"].split("/")[0]
+        data["assoc_date"].append({"type": date_type,"iso": {"not_before": not_before},"value": date})         
+
+    # Check VIAF
+    if pd.isnull(row["VIAF"]) == False:
+         data["rel_con"].append({"label": row["Name.VIAF"], "uri": row["VIAF"], "source": "VIAF"})
+    # Check LOC
+    if pd.isnull(row["LOC"]) == False:
+         data["rel_con"].append({"label": row["Name.LOC"], "uri": row["LOC"], "source": "LoC"})
+    
+    if pd.isnull(row["HAF"]) == False:
+         data["rel_con"].append({"label": row["Name.HAF"], "uri": row["HAF"], "source": "HAF"})
+
+    if pd.isnull(row["Syriaca"]) == False:
+         data["rel_con"].append({"label": row["Name.Syriaca"], "uri": row["Syriaca"], "source": "Syriaca"})
+
+    if pd.isnull(row["Pinakes"]) == False:
+         data["rel_con"].append({"label": row["Name.Pinakes"], "uri": row["Pinakes"], "source": "Pinakes"})
+
+    if pd.isnull(row["Notes"]) == False:
+         data["Notes"].append({"value": row["Notes"]})
+
+    with open(f'json/{local_id}.json', 'w+') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+    
 
 try:
-    csv_file = sys.argv[1]
-except:
-    print("ERROR: Please enter the path to the CSV you would like to transform")
+    csv_file = pd.read_csv(sys.argv[1])    
+except Exception as e:
+    print("ERROR: Please enter the path to the CSV you would like to transform", str(e))
 
-def transform_input(row):
-    template_schema = """{
-    "id": ,
-    "type": "individual",
-    "pref_name": "Abū Qurrah, Thāwdhūrus, approximately 750-825",
-    "alt_name": [
-        {
-            "lang": "English",
-            "value": "Theodore Abū Qurrah"
-        },
-        {
-            "lang": "English",
-            "value": "Theodore Bishop of Harran"
-        },
-        {
-            "lang": "Arabic",
-            "value": "ثاوذورس أبي قرة"
-        }
-    ],
-    "gender": "male",
-    "rel_con": [
-        {
-            "label": "Abū Qurrah, Thāwdhūrus, approximately 750-825",
-            "uri": "http://viaf.org/viaf/116159414",
-            "source": "VIAF"
-        },
-        {
-            "label": "Abū Qurrah, Thāwdhūrus, approximately 750-825",
-            "uri": "http://id.loc.gov/authorities/names/n85000719",
-            "source": "LoC"
-        },
-        {
-            "label": "Abū Qurrah, Thāwdhūrus, approximately 750-825",
-            "uri": "https://w3id.org/haf/person/515032103483",
-            "source": "HAF"
-        },
-        {
-            "label": "Theodore Abu Qurra",
-            "uri": "http://syriaca.org/person/782",
-            "source": "Syriaca"
-        }
-    ],
-    "assoc_date": [
-        {
-            "type": "floruit",
-            "iso": {
-                "not_before": "0725",
-                "not_after": "0850"
-            },
-            "value": "approximately 750-825"
-        }
-    ]
-}"""
-    with open(f'agent_transform_{name}', 'w') as f:
-        json.dump(data, f)
+for i, row in csv_file.iterrows():
+        transform_input(row)
