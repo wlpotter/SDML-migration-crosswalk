@@ -27,7 +27,7 @@ def transform_input(row):
     "gender": "{gender}",
     "rel_con": [],
     "assoc_date": [],
-    "Notes": []}}'''
+    "note": []}}'''
     
     # Load base JSON template into JSON object
     data = json.loads(base_template_schema)
@@ -68,7 +68,7 @@ def transform_input(row):
          data["rel_con"].append({"label": row["Name.Pinakes"], "uri": row["Pinakes"], "source": "Pinakes"})
     # Check Notes
     if pd.isnull(row["Notes"]) == False:
-         data["Notes"].append({"value": row["Notes"]})
+         data["note"].append({"type": "admin", "value": row["Notes"]})
 
     # Check to see if json directory exists if not create it
     if not os.path.exists("json"):
