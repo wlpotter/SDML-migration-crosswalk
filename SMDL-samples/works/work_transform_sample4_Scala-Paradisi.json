@@ -1,0 +1,73 @@
+{
+    "id": 4,
+    "pref_title": "The Ladder of Divine Ascent",
+    "orig_lang": "Greek",
+    "alt_title": [
+        {
+            "lang": "English",
+            "value": "Ladder of Paradise"
+        },
+        {
+            "lang": "Latin",
+            "value": "Climax Paradisi"
+        },
+        {
+            "lang": "Latin",
+            "value": "Scala Paradisi"
+        }
+    ],
+    "genre": [
+        "Theological works"
+    ],
+    "rel_con": [
+        {
+            "label": "John, Climacus, Saint, active 6th century. | Scala Paradisi",
+            "uri": " https://viaf.org/viaf/313377307",
+            "source": "VIAF"
+        },
+        {
+            "label": "Iohannes Climacus, Scala paradisi",
+            "uri": "https://pinakes.irht.cnrs.fr/notices/oeuvre/12161/",
+            "source": "Pinakes"
+        },
+        {
+            "label": "John, Climacus, Saint, active 6th century. Scala paradisi",
+            "uri": "https://w3id.org/haf/work/772036848335",
+            "source": "HAF"
+        },
+        {
+            "label": "Ladder of Divine Ascent",
+            "uri": "https://syriaca.org/work/0001",
+            "source": "Syriaca"
+        }
+    ],
+    "bib": [
+        {
+            "id": 999,
+            "type": "refno",
+            "range": "s.v. 7852, Scala Paradisi",
+            "url": "https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number=7852"
+        }
+    ],
+    "assoc_date": [
+        {
+            "type": "creation",
+            "iso": {
+                "not_before": "0600"
+            },
+            "value": "600"
+        }
+    ],
+    "assoc_name": [
+        {
+            "id": 997,
+            "role": "author"
+        }
+    ],
+    "note": [
+        {
+            "type": "admin",
+            "value": "Author: John Climacus"
+        }
+    ]
+}
