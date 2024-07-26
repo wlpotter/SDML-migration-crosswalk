@@ -9,7 +9,7 @@ Version: 1.0
 import pandas as pd, json, sys, numpy as np, os
 
 # This is the script that transforms each row of the provided csv into a json document formatted accrding to the cross-walk schema
-def transform_input(row):
+def transform_input_agent(row):
     # First pull out the basic columns associated with the row
     local_id = str(row["local ID"])
     type = row["Type"]
@@ -75,15 +75,47 @@ def transform_input(row):
         os.makedirs("json")
 
     # Export JSON
-    with open(f'json/{local_id}.json', 'w+') as f:
+    with open(f'json/{local_id}_agent.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
+def transform_input_work(row):
+    # First pull out the basic columns associated with the row
+    local_id = str(row["local ID"])
+    type = row["Type"]
+    name = row["Name"]
+    gender = row["Gender"]
+    date_type = row["Dates.type"]
+    date = row["Dates"]
+    
+    #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
+    base_template_schema = f'''{{
+    "id": {local_id},
+    "type": "{type}",
+    "pref_name": "{name}",
+    "alt_name": [],
+    "gender": "{gender}",
+    "rel_con": [],
+    "assoc_date": [],
+    "note": []}}''' 
     
 # Check to see if user entered path to csv file
 try:
-    csv_file = pd.read_csv(sys.argv[1])    
-except Exception as e:
-    print("ERROR: Please enter the path to the CSV you would like to transform", str(e))
+    csv_file = pd.read_csv(sys.argv[1])
+    type = sys.argv[2]
+    if type not in ["agents", "works"]:
+            raise ValueError
+except OSError:
+    print("ERROR: Incorrect path to csv, the file may not exist in the provided directory")
+except IndexError:
+     print("Please be sure to enter both command arguments the path to the CSV you would like to transform and the type (agents or works)")
+except ValueError:
+     print(f"'{type}' is not a valid type, must be 'agents' or 'works'")
 
 # run transformation script
-for i, row in csv_file.iterrows():
-        transform_input(row)
+
+if type == "agents":
+    for i, row in csv_file.iterrows():
+            transform_input_agent(row)
+elif type == "works":
+     for i, row in csv_file.iterrows():
+            transform_input_work(row)
