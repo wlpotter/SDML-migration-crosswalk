@@ -78,25 +78,93 @@ def transform_input_agent(row):
     with open(f'json/{local_id}_agent.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
+
+# Function to tranform a work
 def transform_input_work(row):
     # First pull out the basic columns associated with the row
     local_id = str(row["local ID"])
-    type = row["Type"]
-    name = row["Name"]
-    gender = row["Gender"]
-    date_type = row["Dates.type"]
-    date = row["Dates"]
+    name = row["Uniform title"]
+    creation_date = ""
+    normalized_date = ""
+    original_lang_title = ""
+    original_lang = ""
+
+    if pd.isnull(row["Original Language"]) == False:
+         original_lang = row["Original Language"]
+    
+    if pd.isnull(row["Original Language Title"]) == False:
+         original_lang_title = row["Original Language Title"]
+    
+
+    if pd.isnull(row["Date.creation"]) == False:
+        creation_date = row["Date.creation"]
+    
+    
+    if pd.isnull(row["Date.normalized"]) == False:
+        normalized_date = row["Date.normalized"]
+   
+
     
     #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
     base_template_schema = f'''{{
-    "id": {local_id},
-    "type": "{type}",
-    "pref_name": "{name}",
-    "alt_name": [],
-    "gender": "{gender}",
+     "id": {local_id},
+    "pref_title": "{name}",
+    "orig_lang": "{original_lang}",
+    "orig_lang_title": "{original_lang_title}",
+    "alt_title": [],
+    "genre": [],
     "rel_con": [],
+    "bib": [],
     "assoc_date": [],
-    "note": []}}''' 
+    "assoc_name": [],
+    "note": []
+
+     }}''' 
+
+    # Load base JSON template into JSON object
+    data = json.loads(base_template_schema)
+
+    # Grab alternate titles and append
+    if pd.isnull(row["AKA"]) == False:
+        alt_names = zip(row["AKA"].split(" ; "), row["Language.AKA"].split(" ; "))
+        for (name, lang) in alt_names:
+            data["alt_title"].append({"lang": lang, "value": name})    
+    if pd.isnull(row["NS Title"]) == False:
+            alt_names = zip(row["NS Title"].split(" ; "), row["Language.NS Title"].split(" ; "))
+            for (name, lang) in alt_names:
+                data["alt_title"].append({"lang": lang, "value": name})
+
+    if pd.isnull(row["Genres"]) == False:
+        genres = row["Genres"].split(",")
+        for genre in genres:
+            data["genre"].append(genre)  
+    
+    # Check VIAF
+    if pd.isnull(row["VIAF"]) == False:
+         data["rel_con"].append({"label": row["Title.VIAF"], "uri": row["VIAF"], "source": "VIAF"})
+    # Check LOC
+    if pd.isnull(row["LOC"]) == False:
+         data["rel_con"].append({"label": row["Title.LOC"], "uri": row["LOC"], "source": "LoC"})
+    # Check HAF
+    if pd.isnull(row["HAF"]) == False:
+         data["rel_con"].append({"label": row["Title.HAF"], "uri": row["HAF"], "source": "HAF"})
+    # Check Syriaca
+    if pd.isnull(row["Syriaca"]) == False:
+         data["rel_con"].append({"label": row["Title.Syriaca"], "uri": row["Syriaca"], "source": "Syriaca"})
+    # Check Pinakes
+    if pd.isnull(row["Pinakes"]) == False:
+         data["rel_con"].append({"label": row["Title.Pinakes"], "uri": row["Pinakes"], "source": "Pinakes"})
+    # Check Notes
+    if pd.isnull(row["Notes"]) == False:
+         data["note"].append({"type": "admin", "value": row["Notes"]})
+
+    # Check to see if json directory exists if not create it
+    if not os.path.exists("json"):
+        os.makedirs("json")
+
+    # Export JSON
+    with open(f'json/{local_id}_agent.json', 'w+') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
     
 # Check to see if user entered path to csv file
 try:
@@ -118,4 +186,6 @@ if type == "agents":
             transform_input_agent(row)
 elif type == "works":
      for i, row in csv_file.iterrows():
+            
             transform_input_work(row)
+            
