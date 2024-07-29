@@ -36,6 +36,6 @@ Enter the following command into the command prompt followed by the name of the 
 python3 transformation_script.py /path/to/csv/file/file.csv works
 ```
 
- NOTE: do not include quotation marks around file path.
+NOTE: do not include quotation marks around file path.
 
 after running the finished json files will be generated in a folder called ```json``` and each file will be named after the respective local id from the CSV
