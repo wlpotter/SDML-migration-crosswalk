@@ -157,13 +157,29 @@ def transform_input_work(row):
     # Check Notes
     if pd.isnull(row["Notes"]) == False:
          data["note"].append({"type": "admin", "value": row["Notes"]})
+    # Add CPG fields
+    if pd.isnull(row["CPG"]) == False:
+         data["bib"].append({"id": int(row["biblId.CPG"]), "type": "refno", "value": f"s.v. {int(row["CPG"])}, {row["Title.CPG"]}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row["CPG"])}"})
+
+     # Add dates
+    if "/" in normalized_date:
+        not_before = normalized_date.split("/")[0].rjust(4, "0")
+        not_after = normalized_date.split("/")[1].rjust(4, "0")
+        data["assoc_date"].append({"type": "creation","iso": {"not_before": not_before, "not_after": not_after},"value": row["Date.creation"]})         
+    elif normalized_date:
+        not_before = normalized_date.split("/")[0]
+        data["assoc_date"].append({"type": "creation","iso": {"not_before": not_before},"value":row["Date.creation"]})   
+
+    if pd.isnull(row["Author"]) == False:
+         data["assoc_name"].append({"id": int(row["author"]), "role":"Author"})
+
 
     # Check to see if json directory exists if not create it
     if not os.path.exists("json"):
         os.makedirs("json")
 
     # Export JSON
-    with open(f'json/{local_id}_agent.json', 'w+') as f:
+    with open(f'json/{local_id}_work.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     
 # Check to see if user entered path to csv file
