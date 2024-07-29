@@ -24,10 +24,17 @@ pip3 install pandas numpy
 
 # Usage
 
+## Transform agents.csv file
 Enter the following command into the command prompt followed by the name of the csv file
  ```python 
-python3 transformation_script.py /path/to/csv/file/file.csv
+python3 transformation_script.py /path/to/csv/file/file.csv agents
  ```
+
+ ## Transform works.csv file
+Enter the following command into the command prompt followed by the name of the csv file
+ ```python 
+python3 transformation_script.py /path/to/csv/file/file.csv works
+```
 
  NOTE: do not include quotation marks around file path.
 
