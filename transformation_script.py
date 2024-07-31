@@ -172,7 +172,7 @@ def transform_input_work(row):
 
     # Check author role
     if pd.isnull(row["Author"]) == False:
-         data["assoc_name"].append({"id": int(row["author"]), "role":"Author"})
+         data["assoc_name"].append({"id": int(row["Author"]), "role":"author"})
 
 
     # Check to see if json directory exists if not create it
