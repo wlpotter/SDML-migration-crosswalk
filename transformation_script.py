@@ -159,7 +159,7 @@ def transform_input_work(row):
          data["note"].append({"type": "admin", "value": row["Notes"]})
     # Add CPG fields
     if pd.isnull(row["CPG"]) == False:
-         data["bib"].append({"id": int(row["biblId.CPG"]), "type": "refno", "value": f"s.v. {int(row["CPG"])}, {row["Title.CPG"]}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row["CPG"])}"})
+         data["bib"].append({"id": int(row["biblId.CPG"]), "type": "refno", "value": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
 
      # Add dates
     if "/" in normalized_date:
@@ -170,6 +170,7 @@ def transform_input_work(row):
         not_before = normalized_date.split("/")[0]
         data["assoc_date"].append({"type": "creation","iso": {"not_before": not_before},"value":row["Date.creation"]})   
 
+    # Check author role
     if pd.isnull(row["Author"]) == False:
          data["assoc_name"].append({"id": int(row["author"]), "role":"Author"})
 
@@ -182,7 +183,7 @@ def transform_input_work(row):
     with open(f'json/{local_id}_work.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     
-# Check to see if user entered path to csv file
+# Check to see if user entered path to csv file and valid command line argument
 try:
     csv_file = pd.read_csv(sys.argv[1])
     type = sys.argv[2]
@@ -201,7 +202,6 @@ if type == "agents":
     for i, row in csv_file.iterrows():
             transform_input_agent(row)
 elif type == "works":
-     for i, row in csv_file.iterrows():
-            
+     for i, row in csv_file.iterrows():        
             transform_input_work(row)
             
