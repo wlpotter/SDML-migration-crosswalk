@@ -36,11 +36,11 @@ def transform_input_agent(row):
     if pd.isnull(row["AKA"]) == False:
         alt_names = zip(row["AKA"].split(" ; "), row["Language.AKA"].split(" ; "))
         for (name, lang) in alt_names:
-            data["alt_name"].append({"lang": lang, "value": name})    
+            data["alt_name"].append({"lang": lang.strip(), "value": name.strip()})    
     if pd.isnull(row["NS Name"]) == False:
             alt_names = zip(row["NS Name"].split(" ; "), row["Language.NS Name"].split(" ; "))
             for (name, lang) in alt_names:
-                data["alt_name"].append({"lang": lang, "value": name})
+                data["alt_name"].append({"lang": lang.strip(), "value": name.strip()})
 
     # Check to see if there is a date normalized with before and after
     if "/" in row["Dates.normalized"]:
@@ -86,14 +86,8 @@ def transform_input_work(row):
     name = row["Uniform title"]
     creation_date = ""
     normalized_date = ""
-    original_lang_title = ""
-    original_lang = ""
-
-    if pd.isnull(row["Original Language"]) == False:
-         original_lang = row["Original Language"]
     
-    if pd.isnull(row["Original Language Title"]) == False:
-         original_lang_title = row["Original Language Title"]
+
     
 
     if pd.isnull(row["Date.creation"]) == False:
@@ -109,8 +103,6 @@ def transform_input_work(row):
     base_template_schema = f'''{{
      "id": {local_id},
     "pref_title": "{name}",
-    "orig_lang": "{original_lang}",
-    "orig_lang_title": "{original_lang_title}",
     "alt_title": [],
     "genre": [],
     "rel_con": [],
@@ -123,21 +115,28 @@ def transform_input_work(row):
 
     # Load base JSON template into JSON object
     data = json.loads(base_template_schema)
-
+    
+    # Check to see if there is an original lang if so add to object
+    if pd.isnull(row["Original Language"]) == False:
+         data["orig_lang"] = row["Original Language"]
+    
+    if pd.isnull(row["Original Language Title"]) == False:
+         data["orig_lang_title"] = row["Original Language Title"]
+    
     # Grab alternate titles and append
     if pd.isnull(row["AKA"]) == False:
         alt_names = zip(row["AKA"].split(" ; "), row["Language.AKA"].split(" ; "))
         for (name, lang) in alt_names:
-            data["alt_title"].append({"lang": lang, "value": name})    
+            data["alt_title"].append({"lang": lang.strip(), "value": name.strip()})    
     if pd.isnull(row["NS Title"]) == False:
             alt_names = zip(row["NS Title"].split(" ; "), row["Language.NS Title"].split(" ; "))
             for (name, lang) in alt_names:
-                data["alt_title"].append({"lang": lang, "value": name})
+                data["alt_title"].append({"lang": lang.strip(), "value": name.strip()})
 
     if pd.isnull(row["Genres"]) == False:
         genres = row["Genres"].split(",")
         for genre in genres:
-            data["genre"].append(genre)  
+            data["genre"].append(genre.strip())  
     
     # Check VIAF
     if pd.isnull(row["VIAF"]) == False:
@@ -159,7 +158,7 @@ def transform_input_work(row):
          data["note"].append({"type": "admin", "value": row["Notes"]})
     # Add CPG fields
     if pd.isnull(row["CPG"]) == False:
-         data["bib"].append({"id": int(row["biblId.CPG"]), "type": "refno", "value": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
+         data["bib"].append({"id": int(row["biblId.CPG"]), "type": "refno", "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
 
      # Add dates
     if "/" in normalized_date:
