@@ -11,7 +11,7 @@ import pandas as pd, json, sys, numpy as np, os
 # This is the script that transforms each row of the provided csv into a json document formatted accrding to the cross-walk schema
 def transform_input_agent(row):
     # First pull out the basic columns associated with the row
-    local_id = str(row["local ID"])
+    ark = str(row["ARK"])
     type = row["Type"]
     name = row["Name"]
     gender = row["Gender"]
@@ -20,14 +20,13 @@ def transform_input_agent(row):
     
     #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
     base_template_schema = f'''{{
-    "id": {local_id},
+    "ark": {ark},
     "type": "{type}",
     "pref_name": "{name}",
     "alt_name": [],
     "gender": "{gender}",
     "rel_con": [],
-    "assoc_date": [],
-    "note": []}}'''
+    "assoc_date": []}}'''
     
     # Load base JSON template into JSON object
     data = json.loads(base_template_schema)
@@ -66,23 +65,21 @@ def transform_input_agent(row):
     # Check Pinakes
     if pd.isnull(row["Pinakes"]) == False:
          data["rel_con"].append({"label": row["Name.Pinakes"], "uri": row["Pinakes"], "source": "Pinakes"})
-    # Check Notes
-    if pd.isnull(row["Notes"]) == False:
-         data["note"].append({"type": "admin", "value": row["Notes"]})
+    
 
     # Check to see if json directory exists if not create it
     if not os.path.exists("json"):
         os.makedirs("json")
 
     # Export JSON
-    with open(f'json/{local_id}_agent.json', 'w+') as f:
+    with open(f'data/agents/{ark.split("/")[2]}.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
 # Function to tranform a work
 def transform_input_work(row):
     # First pull out the basic columns associated with the row
-    local_id = str(row["local ID"])
+    ark = str(row["ARK"])
     name = row["Uniform title"]
     creation_date = ""
     normalized_date = ""
@@ -101,7 +98,7 @@ def transform_input_work(row):
     
     #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
     base_template_schema = f'''{{
-     "id": {local_id},
+     "ark": {ark},
     "pref_title": "{name}",
     "alt_title": [],
     {'"orig_lang": "",' if pd.isnull(row["Original Language"]) == False else ""}
@@ -110,8 +107,7 @@ def transform_input_work(row):
     "rel_con": [],
     "bib": [],
     "assoc_date": [],
-    "assoc_name": [],
-    "note": []
+    "assoc_name": []
 
      }}''' 
 
@@ -155,12 +151,10 @@ def transform_input_work(row):
     # Check Pinakes
     if pd.isnull(row["Pinakes"]) == False:
          data["rel_con"].append({"label": row["Title.Pinakes"], "uri": row["Pinakes"], "source": "Pinakes"})
-    # Check Notes
-    if pd.isnull(row["Notes"]) == False:
-         data["note"].append({"type": "admin", "value": row["Notes"]})
+
     # Add CPG fields
     if pd.isnull(row["CPG"]) == False:
-         data["bib"].append({"id": int(row["biblId.CPG"]), "type": "refno", "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
+         data["bib"].append({"ark": int(row["biblId.CPG"]), "type": "refno", "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
 
      # Add dates
     if "/" in normalized_date:
@@ -173,7 +167,7 @@ def transform_input_work(row):
 
     # Check author role
     if pd.isnull(row["Author"]) == False:
-         data["assoc_name"].append({"id": int(row["Author"]), "role":"author"})
+         data["assoc_name"].append({"ark": int(row["Author"]), "role":"author"})
 
 
     # Check to see if json directory exists if not create it
@@ -181,7 +175,7 @@ def transform_input_work(row):
         os.makedirs("json")
 
     # Export JSON
-    with open(f'json/{local_id}_work.json', 'w+') as f:
+    with open(f'data/works/{ark.split("/")[2]}', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     
 # Check to see if user entered path to csv file and valid command line argument
