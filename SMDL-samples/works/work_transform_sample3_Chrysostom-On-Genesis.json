@@ -1,9 +1,15 @@
 {
-    "id": 3,
+    "ark": "ark:/21198/z399997",
     "pref_title": "John Chrysostom, Saint, -407. Homilies on Genesis",
     "genre": [
         "Theological works",
         "Commentaries"
+    ],
+    "creator": [
+        {
+            "id": "ark:/21198/z299994",
+            "role": "author"
+        }
     ],
     "rel_con": [
         {
@@ -15,22 +21,6 @@
             "label": "John Chrysostom, Saint, -407. | Homilies on Genesis",
             "uri": "https://viaf.org/viaf/185525092",
             "source": "VIAF"
-        }
-    ],
-    "assoc_date": [
-        {
-            "type": "creation",
-            "iso": {
-                "not_before": "0301",
-                "not_after": "0400"
-            },
-            "value": "4th century"
-        }
-    ],
-    "assoc_name": [
-        {
-            "id": 998,
-            "role": "author"
         }
     ]
 }

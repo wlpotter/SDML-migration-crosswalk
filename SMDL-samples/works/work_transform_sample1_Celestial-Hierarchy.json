@@ -1,12 +1,12 @@
 {
-    "id": 1,
+    "ark": "ark:/21198/z399999",
     "pref_title": "Celestial hierarchy",
-    "orig_lang": "Greek",
+    "orig_lang": {
+        "id": "gree1276",
+        "label": "Greek"
+        },
     "alt_title": [
-        {
-            "lang": "Latin",
-            "value": "De coelesti hierarchia"
-        }
+        "De coelesti hierarchia"
     ],
     "genre": [
         "Theological works"
@@ -35,8 +35,11 @@
     ],
     "bib": [
         {
-            "id": 999,
-            "type": "refno",
+            "id": "recYhtAZxuUFmfIeX",
+            "type": {
+                "id": "refno",
+                "label": "Reference Number"
+            },
             "range": "s.v. 6600, De coelesti hierarchia",
             "url": "https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number=6600"
         }

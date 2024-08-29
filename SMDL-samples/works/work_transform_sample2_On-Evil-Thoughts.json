@@ -1,21 +1,31 @@
 {
-    "id": 2,
+    "ark": "ark:/21198/z399998",
     "pref_title": "Evagrius, Ponticus, 345?-399. On Evil Thoughts",
-    "orig_lang": "Greek",
+    "orig_lang": {
+        "id": "gree1276",
+        "label": "Greek"
+    },
     "orig_lang_title": "Περὶ διαφορῶν πονηρῶν λογισμῶν",
     "alt_title": [
-        {
-            "lang": "Latin",
-            "value": "De malignis cogitationibus"
-        },
-        {
-            "lang": "English",
-            "value": "Thoughts"
-        }
+        "De malignis cogitationibus",
+        "Thoughts"
     ],
     "genre": [
         "Theological works"
     ],
+    "creator": [
+        {
+            "id": "ark:/21198/z299995",
+            "role": "author"
+        }
+    ],
+    "creation": {
+        "value": "4th century",
+        "iso": {
+            "not_before": "0301",
+            "not_after": "0400"
+            }
+    },
     "rel_con": [
         {
             "label": "Euagrius Ponticus De Cogitationibus",
@@ -25,26 +35,13 @@
     ],
     "bib": [
         {
-            "id": 999,
-            "type": "refno",
+            "id": "recYhtAZxuUFmfIeX",
+            "type": {
+                "id": "refno",
+                "label": "Reference Number"
+            },
             "range": "s.v. 2450, De malignis cogitationibus",
             "url": "https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number=6600"
-        }
-    ],
-    "assoc_date": [
-        {
-            "type": "creation",
-            "iso": {
-                "not_before": "0301",
-                "not_after": "0400"
-            },
-            "value": "4th century"
-        }
-    ],
-    "assoc_name": [
-        {
-            "id": 999,
-            "role": "author"
         }
     ]
 }

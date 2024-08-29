@@ -1,23 +1,31 @@
 {
-    "id": 4,
+    "ark": "ark:/21198/z399996",
     "pref_title": "The Ladder of Divine Ascent",
-    "orig_lang": "Greek",
+    "orig_lang": {
+        "id": "gree1276",
+        "label": "Greek"
+        },
     "alt_title": [
-        {
-            "lang": "English",
-            "value": "Ladder of Paradise"
-        },
-        {
-            "lang": "Latin",
-            "value": "Climax Paradisi"
-        },
-        {
-            "lang": "Latin",
-            "value": "Scala Paradisi"
-        }
+        "Ladder of Paradise",
+        "Climax Paradisi",
+        "Scala Paradisi"
     ],
     "genre": [
         "Theological works"
+    ],
+    "creator": [
+        {
+            "id": "ark:/21198/z299993",
+            "role": "author"
+        }
+    ],
+    "creation": [
+        {
+            "value": "600",
+            "iso": {
+                "not_before": "0600"
+            }
+        }
     ],
     "rel_con": [
         {
@@ -43,31 +51,13 @@
     ],
     "bib": [
         {
-            "id": 999,
-            "type": "refno",
+            "id": "recYhtAZxuUFmfIeX",
+            "type": {
+                "id": "refno",
+                "label": "Reference Number"
+            },
             "range": "s.v. 7852, Scala Paradisi",
             "url": "https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number=7852"
-        }
-    ],
-    "assoc_date": [
-        {
-            "type": "creation",
-            "iso": {
-                "not_before": "0600"
-            },
-            "value": "600"
-        }
-    ],
-    "assoc_name": [
-        {
-            "id": 997,
-            "role": "author"
-        }
-    ],
-    "note": [
-        {
-            "type": "admin",
-            "value": "Author: John Climacus"
         }
     ]
 }

@@ -101,13 +101,12 @@ def transform_input_work(row):
      "ark": {ark},
     "pref_title": "{name}",
     "alt_title": [],
-    {'"orig_lang": "",' if pd.isnull(row["Original Language"]) == False else ""}
-    {'"orig_lang_title": "",' if pd.isnull(row["Original Language Title"]) == False else ""}
+    "orig_lang": [],
     "genre": [],
     "rel_con": [],
     "bib": [],
-    "assoc_date": [],
-    "assoc_name": []
+    "creation_date": [],
+    "creator": []
 
      }}''' 
 
@@ -116,10 +115,8 @@ def transform_input_work(row):
     
     # Check to see if there is an original lang if so add to object
     if pd.isnull(row["Original Language"]) == False:
-         data["orig_lang"] = row["Original Language"]
+         data["orig_lang"].append({"id": row["Original Language"], "label": row["Original Language Label"]})
     
-    if pd.isnull(row["Original Language Title"]) == False:
-         data["orig_lang_title"] = row["Original Language Title"]
     
     # Grab alternate titles and append
     if pd.isnull(row["AKA"]) == False:
@@ -154,20 +151,20 @@ def transform_input_work(row):
 
     # Add CPG fields
     if pd.isnull(row["CPG"]) == False:
-         data["bib"].append({"ark": int(row["biblId.CPG"]), "type": "refno", "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
-
+         data["bib"].append({"ark": int(row["biblId.CPG"]), "type": [], "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
+         data["bib"]["type"].append({"id": "refno", "label": "Reference Number"})
      # Add dates
     if "/" in normalized_date:
         not_before = normalized_date.split("/")[0].rjust(4, "0")
         not_after = normalized_date.split("/")[1].rjust(4, "0")
-        data["assoc_date"].append({"type": "creation","iso": {"not_before": not_before, "not_after": not_after},"value": row["Date.creation"]})         
+        data["creation_date"].append({"iso": {"not_before": not_before, "not_after": not_after},"value": row["Date.creation"]})         
     elif normalized_date:
         not_before = normalized_date.split("/")[0]
-        data["assoc_date"].append({"type": "creation","iso": {"not_before": not_before},"value":row["Date.creation"]})   
+        data["creation_date"].append({"iso": {"not_before": not_before},"value":row["Date.creation"]})   
 
     # Check author role
     if pd.isnull(row["Author"]) == False:
-         data["assoc_name"].append({"ark": int(row["Author"]), "role":"author"})
+         data["creator"].append({"id": int(row["Author"]), "role":"author"})
 
 
     # Check to see if json directory exists if not create it

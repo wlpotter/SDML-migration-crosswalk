@@ -1,18 +1,19 @@
 {
-    "id": 3,
-    "type": "individual",
+    "id": "ark:/21198/z299997",
+    "type": "person",
     "pref_name": "Babai, Mar, active 553-628",
     "alt_name": [
-        {
-            "lang": "English",
-            "value": "Babai the Great"
-        },
-        {
-            "lang": "Syriac",
-            "value": "ܒܒܝ ܪܒܐ"
-        }
+        "Babai the Great",
+        "ܒܒܝ ܪܒܐ"
     ],
-    "gender": "male",
+    "gender": "Man",
+    "floruit": {
+        "value": "553-628",
+        "iso": {
+                "not_before": "0553",
+                "not_after": "0628"
+            }
+    },
     "rel_con": [
         {
             "label": "Babai, Mar, active 553-628",
@@ -33,16 +34,6 @@
             "label": "Babai the Great",
             "uri": "https://syriaca.org/person/359",
             "source": "Syriaca"
-        }
-    ],
-    "assoc_date": [
-        {
-            "type": "floruit",
-            "iso": {
-                "not_before": "0553",
-                "not_after": "0628"
-            },
-            "value": "553-628"
         }
     ]
 }
