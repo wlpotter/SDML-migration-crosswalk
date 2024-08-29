@@ -8,6 +8,14 @@ Version: 1.0
 # import the required dependencies
 import pandas as pd, json, sys, numpy as np, os
 
+works_directory = "data/works"
+agents_directory = "data/agents"
+if not os.path.exists(works_directory):
+    os.makedirs(works_directory)
+
+if not os.path.exists(agents_directory):
+    os.makedirs(agents_directory)
+
 # This is the script that transforms each row of the provided csv into a json document formatted accrding to the cross-walk schema
 def transform_input_agent(row):
     # First pull out the basic columns associated with the row
@@ -20,35 +28,45 @@ def transform_input_agent(row):
     
     #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
     base_template_schema = f'''{{
-    "ark": {ark},
+    "ark": "{ark}",
     "type": "{type}",
     "pref_name": "{name}",
     "alt_name": [],
     "gender": "{gender}",
-    "rel_con": [],
-    "assoc_date": []}}'''
+    {'"floruit_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit" else ""}
+    {'"birth_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth" else ""}
+    {'"death_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death" else ""}
+    "rel_con": []}}'''
     
     # Load base JSON template into JSON object
     data = json.loads(base_template_schema)
     
-    # Check if there are associated alternate names and if so append them to the json object
+    # Grab alternate names and append
+    alt_names = []
     if pd.isnull(row["AKA"]) == False:
-        alt_names = zip(row["AKA"].split(" ; "), row["Language.AKA"].split(" ; "))
-        for (name, lang) in alt_names:
-            data["alt_name"].append({"lang": lang.strip(), "value": name.strip()})    
+         alt_names = row["AKA"].split(";")
     if pd.isnull(row["NS Name"]) == False:
-            alt_names = zip(row["NS Name"].split(" ; "), row["Language.NS Name"].split(" ; "))
-            for (name, lang) in alt_names:
-                data["alt_name"].append({"lang": lang.strip(), "value": name.strip()})
+         alt_names = alt_names + row["NS Name"].split(";")
+    data["alt_name"] = [x.strip() for x in alt_names]
 
     # Check to see if there is a date normalized with before and after
     if "/" in row["Dates.normalized"]:
         not_before = row["Dates.normalized"].split("/")[0].rjust(4, "0")
         not_after = row["Dates.normalized"].split("/")[1].rjust(4, "0")
-        data["assoc_date"].append({"type": date_type,"iso": {"not_before": not_before, "not_after": not_after},"value": date})         
+        if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
+             data["floruit_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}         
+        if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth":
+             data["birth_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}
+        if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death":
+             data["death_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}        
     else:
         not_before = row["Dates.normalized"].split("/")[0]
-        data["assoc_date"].append({"type": date_type,"iso": {"not_before": not_before},"value": date})         
+        if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
+             data["floruit_date"] = {"value": date, "iso": {"not_before": not_before}}         
+        if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth":
+             data["birth_date"] = {"value": date, "iso": {"not_before": not_before}}
+        if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death":
+             data["death_date"] = {"value": date, "iso": {"not_before": not_before}}     
 
     # Check VIAF
     if pd.isnull(row["VIAF"]) == False:
@@ -67,12 +85,9 @@ def transform_input_agent(row):
          data["rel_con"].append({"label": row["Name.Pinakes"], "uri": row["Pinakes"], "source": "Pinakes"})
     
 
-    # Check to see if json directory exists if not create it
-    if not os.path.exists("json"):
-        os.makedirs("json")
 
     # Export JSON
-    with open(f'data/agents/{ark.split("/")[2]}.json', 'w+') as f:
+    with open(f'{agents_directory}/{ark.split("/")[2]}.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
@@ -98,15 +113,16 @@ def transform_input_work(row):
     
     #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
     base_template_schema = f'''{{
-     "ark": {ark},
+    "ark": "{ark}",
     "pref_title": "{name}",
+    "orig_lang": "",
+    {'"orig_lang_title": "",' if pd.isnull(row["Original Language Title"]) == False else ""}
     "alt_title": [],
-    "orig_lang": [],
     "genre": [],
+    {'"creator": [],' if pd.isnull(row["Author"]) == False else ""}
+    {'"creation_date": [],' if pd.isnull(row["Date.normalized"]) == False else ""}
     "rel_con": [],
-    "bib": [],
-    "creation_date": [],
-    "creator": []
+    "bib": []
 
      }}''' 
 
@@ -115,19 +131,20 @@ def transform_input_work(row):
     
     # Check to see if there is an original lang if so add to object
     if pd.isnull(row["Original Language"]) == False:
-         data["orig_lang"].append({"id": row["Original Language"], "label": row["Original Language Label"]})
+         data["orig_lang"] = {"id": row["Original Language"], "label": row["Original Language Label"]}
+    
+    if pd.isnull(row["Original Language Title"]) == False:
+         data["orig_lang_title"] = row["Original Language Title"]
     
     
     # Grab alternate titles and append
+    alt_titles = []
     if pd.isnull(row["AKA"]) == False:
-        alt_names = zip(row["AKA"].split(" ; "), row["Language.AKA"].split(" ; "))
-        for (name, lang) in alt_names:
-            data["alt_title"].append({"lang": lang.strip(), "value": name.strip()})    
+         alt_titles = row["AKA"].split(";") 
     if pd.isnull(row["NS Title"]) == False:
-            alt_names = zip(row["NS Title"].split(" ; "), row["Language.NS Title"].split(" ; "))
-            for (name, lang) in alt_names:
-                data["alt_title"].append({"lang": lang.strip(), "value": name.strip()})
-
+         alt_titles = alt_titles + row["NS Title"].split(";")
+    data["alt_title"] = [x.strip() for x in alt_titles]
+        
     if pd.isnull(row["Genres"]) == False:
         genres = row["Genres"].split(",")
         for genre in genres:
@@ -151,20 +168,20 @@ def transform_input_work(row):
 
     # Add CPG fields
     if pd.isnull(row["CPG"]) == False:
-         data["bib"].append({"ark": int(row["biblId.CPG"]), "type": [], "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
-         data["bib"]["type"].append({"id": "refno", "label": "Reference Number"})
+         data["bib"].append({"id": row["biblId.CPG"], "type": {"id": "refno", "label": "Reference Number"}, "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
+         
      # Add dates
     if "/" in normalized_date:
         not_before = normalized_date.split("/")[0].rjust(4, "0")
         not_after = normalized_date.split("/")[1].rjust(4, "0")
-        data["creation_date"].append({"iso": {"not_before": not_before, "not_after": not_after},"value": row["Date.creation"]})         
+        data["creation_date"] = {"value": row["Date.creation"], "iso": {"not_before": not_before, "not_after": not_after}}         
     elif normalized_date:
         not_before = normalized_date.split("/")[0]
-        data["creation_date"].append({"iso": {"not_before": not_before},"value":row["Date.creation"]})   
+        data["creation_date"] = {"value": row["Date.creation"], "iso": {"not_before": not_before}}   
 
     # Check author role
     if pd.isnull(row["Author"]) == False:
-         data["creator"].append({"id": int(row["Author"]), "role":"author"})
+         data["creator"].append({"id": row["Author"], "role":"author"})
 
 
     # Check to see if json directory exists if not create it
@@ -172,7 +189,7 @@ def transform_input_work(row):
         os.makedirs("json")
 
     # Export JSON
-    with open(f'data/works/{ark.split("/")[2]}', 'w+') as f:
+    with open(f'{works_directory}/{ark.split("/")[2]}.json', 'w+') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     
 # Check to see if user entered path to csv file and valid command line argument
