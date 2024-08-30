@@ -23,7 +23,6 @@ def transform_input_agent(row):
     type = row["Type"]
     name = row["Name"]
     gender = row["Gender"]
-    date_type = row["Dates.type"]
     date = row["Dates"]
     
     #template for building JSON document according to cross-walk schema https://airtable.com/apptwZzt3XnHrd0bv/tblsKf3bUA04XMUhc/viwsPbKs24Fifny8K?blocks=hide
@@ -96,14 +95,9 @@ def transform_input_work(row):
     # First pull out the basic columns associated with the row
     ark = str(row["ARK"])
     name = row["Uniform title"]
-    creation_date = ""
     normalized_date = ""
     
 
-    
-
-    if pd.isnull(row["Date.creation"]) == False:
-        creation_date = row["Date.creation"]
     
     
     if pd.isnull(row["Date.normalized"]) == False:
