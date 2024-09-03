@@ -31,7 +31,7 @@ def transform_input_agent(row):
     "type": "{type}",
     "pref_name": "{name}",
     "alt_name": [],
-    "gender": "{gender}",
+    {'"gender": "{gender}",' if pd.isnull(row["Gender"]) == False else ""}
     {'"floruit_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit" else ""}
     {'"birth_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth" else ""}
     {'"death_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death" else ""}
