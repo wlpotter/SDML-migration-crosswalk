@@ -49,9 +49,9 @@ def transform_input_agent(row):
     data["alt_name"] = [x.strip() for x in alt_names]
 
     # Check to see if there is a date normalized with before and after
-    if "/" in row["Dates.normalized"]:
-        not_before = row["Dates.normalized"].split("/")[0].rjust(4, "0")
-        not_after = row["Dates.normalized"].split("/")[1].rjust(4, "0")
+    if "/" in str(row["Dates.normalized"]):
+        not_before = str(row["Dates.normalized"]).split("/")[0].rjust(4, "0")
+        not_after = str(row["Dates.normalized"]).split("/")[1].rjust(4, "0")
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
              data["floruit_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}         
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth":
@@ -59,7 +59,7 @@ def transform_input_agent(row):
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death":
              data["death_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}        
     else:
-        not_before = row["Dates.normalized"].split("/")[0]
+        not_before = str(row["Dates.normalized"]).split("/")[0]
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
              data["floruit_date"] = {"value": date, "iso": {"not_before": not_before}}         
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth":
@@ -101,7 +101,7 @@ def transform_input_work(row):
     
     
     if pd.isnull(row["Date.normalized"]) == False:
-        normalized_date = row["Date.normalized"]
+        normalized_date = str(row["Date.normalized"])
    
 
     
