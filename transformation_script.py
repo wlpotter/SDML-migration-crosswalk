@@ -31,7 +31,7 @@ def transform_input_agent(row):
     "type": "{type}",
     "pref_name": "{name}",
     "alt_name": [],
-    {'"gender": "{gender}",' if pd.isnull(row["Gender"]) == False else ""}
+    {'"gender": "",' if pd.isnull(row["Gender"]) == False else ""}
     {'"floruit_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit" else ""}
     {'"birth_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth" else ""}
     {'"death_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death" else ""}
@@ -48,6 +48,11 @@ def transform_input_agent(row):
          alt_names = alt_names + row["NS Name"].split(";")
     data["alt_name"] = [x.strip() for x in alt_names]
 
+    # Append gender if it exists
+
+    if pd.isnull(row["Gender"]) == False:
+         data["gender"] = gender
+ 
     # Check to see if there is a date normalized with before and after
     if "/" in str(row["Dates.normalized"]):
         not_before = str(row["Dates.normalized"]).split("/")[0].rjust(4, "0")
