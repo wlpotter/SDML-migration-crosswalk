@@ -58,11 +58,11 @@ def transform_input_agent(row):
         not_before = str(row["Dates.normalized"]).split("/")[0].rjust(4, "0")
         not_after = str(row["Dates.normalized"]).split("/")[1].rjust(4, "0")
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
-             data["floruit_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}         
+             data["floruit"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}         
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth":
-             data["birth_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}
+             data["birth"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death":
-             data["death_date"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}        
+             data["death"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}        
     else:
         not_before = str(row["Dates.normalized"]).split("/")[0]
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
