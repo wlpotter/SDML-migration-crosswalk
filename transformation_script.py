@@ -32,9 +32,9 @@ def transform_input_agent(row):
     "pref_name": "{name}",
     "alt_name": [],
     {'"gender": "",' if pd.isnull(row["Gender"]) == False else ""}
-    {'"floruit_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit" else ""}
-    {'"birth_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth" else ""}
-    {'"death_date": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death" else ""}
+    {'"birth": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth" else ""}
+    {'"death": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death" else ""}
+    {'"floruit": "",' if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit" else ""}
     "rel_con": []}}'''
     
     # Load base JSON template into JSON object
@@ -66,11 +66,11 @@ def transform_input_agent(row):
     else:
         not_before = str(row["Dates.normalized"]).split("/")[0]
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
-             data["floruit_date"] = {"value": date, "iso": {"not_before": not_before}}         
+             data["floruit"] = {"value": date, "iso": {"not_before": not_before}}         
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth":
-             data["birth_date"] = {"value": date, "iso": {"not_before": not_before}}
+             data["birth"] = {"value": date, "iso": {"not_before": not_before}}
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death":
-             data["death_date"] = {"value": date, "iso": {"not_before": not_before}}     
+             data["death"] = {"value": date, "iso": {"not_before": not_before}}     
 
     # Check VIAF
     if pd.isnull(row["VIAF"]) == False:
@@ -119,7 +119,7 @@ def transform_input_work(row):
     "alt_title": [],
     "genre": [],
     {'"creator": [],' if pd.isnull(row["Author"]) == False else ""}
-    {'"creation_date": [],' if pd.isnull(row["Date.normalized"]) == False else ""}
+    {'"creation": [],' if pd.isnull(row["Date.normalized"]) == False else ""}
     "rel_con": [],
     "bib": []
 
@@ -173,10 +173,10 @@ def transform_input_work(row):
     if "/" in normalized_date:
         not_before = normalized_date.split("/")[0].rjust(4, "0")
         not_after = normalized_date.split("/")[1].rjust(4, "0")
-        data["creation_date"] = {"value": row["Date.creation"], "iso": {"not_before": not_before, "not_after": not_after}}         
+        data["creation"] = {"value": row["Date.creation"], "iso": {"not_before": not_before, "not_after": not_after}}         
     elif normalized_date:
         not_before = normalized_date.split("/")[0]
-        data["creation_date"] = {"value": row["Date.creation"], "iso": {"not_before": not_before}}   
+        data["creation"] = {"value": row["Date.creation"], "iso": {"not_before": not_before}}   
 
     # Check author role
     if pd.isnull(row["Author"]) == False:
