@@ -64,7 +64,7 @@ def transform_input_agent(row):
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "death":
              data["death"] = {"value": date, "iso": {"not_before": not_before, "not_after": not_after}}        
     else:
-        not_before = str(row["Dates.normalized"]).split("/")[0]
+        not_before = str(row["Dates.normalized"]).split("/")[0].rjust(4, "0")
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "floruit":
              data["floruit"] = {"value": date, "iso": {"not_before": not_before}}         
         if pd.isnull(row["Dates.type"]) == False and row["Dates.type"] == "birth":
@@ -175,7 +175,7 @@ def transform_input_work(row):
         not_after = normalized_date.split("/")[1].rjust(4, "0")
         data["creation"] = {"value": row["Date.creation"], "iso": {"not_before": not_before, "not_after": not_after}}         
     elif normalized_date:
-        not_before = normalized_date.split("/")[0]
+        not_before = normalized_date.split("/")[0].rjust(4, "0")
         data["creation"] = {"value": row["Date.creation"], "iso": {"not_before": not_before}}   
 
     # Check author role
