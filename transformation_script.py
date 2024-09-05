@@ -162,7 +162,8 @@ def transform_input_work(row):
 
     # Add CPG fields
     if pd.isnull(row["CPG"]) == False:
-         data["bib"].append({"id": row["biblId.CPG"], "type": {"id": "refno", "label": "Reference Number"}, "range": f"s.v. {int(row['CPG'])}, {row['Title.CPG']}", "url": f"https://clavis.brepols.net/clacla/OA/Link.aspx?clavis=cpg&number={int(row['CPG'])}"})
+         data["refno"] = [{"label": row['Title.CPG'], "idno": str(int(row["CPG"])), "source": "CPG"}]
+         
          
      # Add dates
     if "/" in normalized_date:
@@ -179,8 +180,7 @@ def transform_input_work(row):
 
 
     # Check to see if json directory exists if not create it
-    if not os.path.exists("json"):
-        os.makedirs("json")
+ 
 
     # Export JSON
     with open(f'{works_directory}/{ark.split("/")[2]}.json', 'w+') as f:
