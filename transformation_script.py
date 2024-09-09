@@ -114,7 +114,7 @@ def transform_input_work(row):
     base_template_schema = f'''{{
     "ark": "{ark}",
     "pref_title": "{name}",
-    "orig_lang": "",
+    {'"orig_lang": "",' if pd.isnull(row["Original Language"]) == False else ""}
     {'"orig_lang_title": "",' if pd.isnull(row["Original Language Title"]) == False else ""}
     "alt_title": [],
     "genre": [],
