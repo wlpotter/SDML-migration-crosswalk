@@ -121,6 +121,7 @@ def transform_input_work(row):
     {'"creator": [],' if pd.isnull(row["Author"]) == False else ""}
     {'"creation": [],' if pd.isnull(row["Date.normalized"]) == False else ""}
     "rel_con": [],
+    "refno": [],
     "bib": []
 
      }}''' 
@@ -167,7 +168,7 @@ def transform_input_work(row):
 
     # Add CPG fields
     if pd.isnull(row["CPG"]) == False:
-         data["refno"] = [{"label": row['Title.CPG'], "idno": str(int(row["CPG"])), "source": "CPG"}]
+         data["refno"] = [{"label": row['Title.CPG'], "idno": row["CPG"], "source": "CPG"}]
          
          
      # Add dates
@@ -193,7 +194,7 @@ def transform_input_work(row):
     
 # Check to see if user entered path to csv file and valid command line argument
 try:
-    csv_file = pd.read_csv(sys.argv[1])
+    csv_file = pd.read_csv(sys.argv[1], dtype={'CPG': 'string'}) # explicitly declaring CPG as string data to avoid handling as a number
     type = sys.argv[2]
     if type not in ["agents", "works"]:
             raise ValueError
